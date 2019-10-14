@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package playerpb;
+
+import "github.com/luno/reflex/reflexpb/reflex.proto";
+import "google/protobuf/timestamp.proto";
+
+service Player {
+    rpc StreamRoundEvents(reflexpb.StreamRequest) returns (stream reflexpb.Event) {}
+    rpc GetParts(GetPartsReq) returns (GetPartsResp) {}
+    rpc GetRank(GetRankReq) returns (GetRankResp) {}
+}
+
+message GetPartsReq {
+    int64 round_id = 1;
+}
+
+message GetPartsResp {
+    repeated Part parts = 1;
+}
+
+message GetRankReq {
+    int64 round_id = 1;
+}
+
+message GetRankResp {
+    int32 rank = 1;
+}
+
+message Part {
+    int64 id = 1;
+    int64 external_id = 2;
+    string player = 3;
+    int32 status = 4;
+
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+}
