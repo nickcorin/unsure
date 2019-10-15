@@ -1,8 +1,12 @@
 package ops
 
 import (
+	"context"
 	"flag"
 	"github.com/corverroos/unsure"
+	"github.com/corverroos/unsure/engine"
+	"github.com/luno/jettison/errors"
+	"github.com/luno/jettison/log"
 	"github.com/luno/reflex"
 	"github.com/luno/reflex/rpatterns"
 	"github.com/nickcorin/unsure/player"
@@ -17,6 +21,9 @@ var (
 
 // StartLoops begins running reflex consumers in separate goroutines.
 func StartLoops(b Backends) {
+	// Start matches on the Unreal Engine.
+	go startMatchesForever(b)
+
 	// Unsure Engine events.
 	go notifyToJoinForever(b)
 	go notifyToCollectForever(b)
@@ -32,6 +39,18 @@ func StartLoops(b Backends) {
 	for _, p := range b.Peers() {
 		go collectPeerPartsForever(b, p)
 		go acknowledgePeerSubmissionsForever(b, p)
+	}
+}
+
+func startMatchesForever(b Backends) {
+	ctx := context.Background()
+	for {
+		err := b.EngineClient().StartMatch(ctx, *teamName, len(b.Peers()))
+		if errors.Is(err, engine.ErrActiveMatch) {
+			break
+		} else if err != nil {
+			log.Error(ctx, err)
+		}
 	}
 }
 

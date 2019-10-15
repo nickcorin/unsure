@@ -2,6 +2,7 @@ package ops
 
 import (
 	"context"
+	"github.com/corverroos/unsure/engine"
 	"github.com/luno/fate"
 	"github.com/luno/jettison/errors"
 	"github.com/luno/jettison/j"
@@ -34,7 +35,7 @@ func joinRounds(b Backends) reflex.Consumer {
 		// Attempt to join the round.
 		joined, err := b.EngineClient().JoinRound(ctx, *teamName, *playerName,
 			r.ExternalID)
-		if err != nil {
+		if err != nil && !errors.Is(err, engine.ErrAlreadyJoined){
 			return errors.Wrap(err, "failed to join round",
 				j.KV("external_id", r.ExternalID))
 		}
@@ -84,7 +85,12 @@ func collectEngineParts(b Backends) reflex.Consumer {
 		// Collect the parts from the Unsure Engine.
 		data, err := b.EngineClient().CollectRound(ctx, *teamName,
 			*playerName, r.ExternalID)
-		if err != nil {
+		if errors.Is(err, engine.ErrExcludedCollect) {
+			err = rounds.ShiftToFailed(ctx, b.PlayerDB(), r.ID)
+			if err != nil {
+				return errors.Wrap(err, "failed to shift round to failed")
+			}
+		} else if err != nil {
 			return errors.Wrap(err, "failed to collect parts",
 				j.KV("external_id", r.ExternalID))
 		}
@@ -166,7 +172,7 @@ func submitParts(b Backends) reflex.Consumer {
 		// Submit the round.
 		err = b.EngineClient().SubmitRound(ctx, *teamName, *playerName,
 			r.ExternalID, int(total))
-		if err != nil {
+		if err != nil && !errors.Is(err, engine.ErrAlreadySubmitted){
 			return errors.Wrap(err, "failed to submit parts")
 		}
 
