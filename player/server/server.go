@@ -2,6 +2,9 @@ package server
 
 import (
 	"context"
+	"github.com/luno/jettison/j"
+	"github.com/nickcorin/unsure/player/ops"
+	"github.com/nickcorin/unsure/player/playerpb/protocp"
 
 	"github.com/luno/jettison/errors"
 	"github.com/luno/reflex"
@@ -39,11 +42,38 @@ func (srv *Server) StreamRoundEvents(req *reflexpb.StreamRequest,
 // GetParts returns a Player's parts received for a given round.
 func (srv *Server) GetParts(ctx context.Context, req *pb.GetPartsReq) (
 	*pb.GetPartsResp, error) {
-	return nil, errors.New("not implemented")
+	pl, err := ops.GetParts(ctx, srv.b, req.ExternalId)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to list parts for round",
+			j.KV("external_id", req.ExternalId))
+	}
+
+	// Convert parts to proto.
+	var parts []*pb.Part
+	for _, p := range pl {
+		partProto, err := protocp.PartToProto(&p)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to convert part to proto")
+		}
+
+		parts = append(parts, partProto)
+	}
+
+	return &pb.GetPartsResp{Parts: parts}, nil
 }
 
-// GetRank returns a Player's rank received for a given round.
-func (srv *Server) GetRank(ctx context.Context, req *pb.GetRankReq) (
-	*pb.GetRankResp, error) {
-	return nil, errors.New("not implemented")
+// GetRound returns a local rounds from a Player's DB.
+func (srv *Server) GetRound(ctx context.Context, req *pb.GetRoundReq) (
+	*pb.GetRoundResp, error) {
+	r, err := rounds.Lookup(ctx, srv.b.PlayerDB(), req.RoundId)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to lookup round")
+	}
+
+	// Convert round to proto.
+	roundProto, err := protocp.RoundToProto(r)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to convert round to proto")
+	}
+	return &pb.GetRoundResp{Round: roundProto}, nil
 }

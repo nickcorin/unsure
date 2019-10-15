@@ -26,7 +26,7 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type GetPartsReq struct {
-	RoundId              int64    `protobuf:"varint,1,opt,name=round_id,json=roundId,proto3" json:"round_id,omitempty"`
+	ExternalId           int64    `protobuf:"varint,1,opt,name=external_id,json=externalId,proto3" json:"external_id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -36,7 +36,7 @@ func (m *GetPartsReq) Reset()         { *m = GetPartsReq{} }
 func (m *GetPartsReq) String() string { return proto.CompactTextString(m) }
 func (*GetPartsReq) ProtoMessage()    {}
 func (*GetPartsReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_player_9c6c2131ee52060f, []int{0}
+	return fileDescriptor_player_7716394df972353b, []int{0}
 }
 func (m *GetPartsReq) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GetPartsReq.Unmarshal(m, b)
@@ -56,9 +56,9 @@ func (m *GetPartsReq) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GetPartsReq proto.InternalMessageInfo
 
-func (m *GetPartsReq) GetRoundId() int64 {
+func (m *GetPartsReq) GetExternalId() int64 {
 	if m != nil {
-		return m.RoundId
+		return m.ExternalId
 	}
 	return 0
 }
@@ -74,7 +74,7 @@ func (m *GetPartsResp) Reset()         { *m = GetPartsResp{} }
 func (m *GetPartsResp) String() string { return proto.CompactTextString(m) }
 func (*GetPartsResp) ProtoMessage()    {}
 func (*GetPartsResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_player_9c6c2131ee52060f, []int{1}
+	return fileDescriptor_player_7716394df972353b, []int{1}
 }
 func (m *GetPartsResp) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GetPartsResp.Unmarshal(m, b)
@@ -101,89 +101,169 @@ func (m *GetPartsResp) GetParts() []*Part {
 	return nil
 }
 
-type GetRankReq struct {
+type GetRoundReq struct {
 	RoundId              int64    `protobuf:"varint,1,opt,name=round_id,json=roundId,proto3" json:"round_id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetRankReq) Reset()         { *m = GetRankReq{} }
-func (m *GetRankReq) String() string { return proto.CompactTextString(m) }
-func (*GetRankReq) ProtoMessage()    {}
-func (*GetRankReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_player_9c6c2131ee52060f, []int{2}
+func (m *GetRoundReq) Reset()         { *m = GetRoundReq{} }
+func (m *GetRoundReq) String() string { return proto.CompactTextString(m) }
+func (*GetRoundReq) ProtoMessage()    {}
+func (*GetRoundReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_player_7716394df972353b, []int{2}
 }
-func (m *GetRankReq) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetRankReq.Unmarshal(m, b)
+func (m *GetRoundReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetRoundReq.Unmarshal(m, b)
 }
-func (m *GetRankReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetRankReq.Marshal(b, m, deterministic)
+func (m *GetRoundReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetRoundReq.Marshal(b, m, deterministic)
 }
-func (dst *GetRankReq) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetRankReq.Merge(dst, src)
+func (dst *GetRoundReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetRoundReq.Merge(dst, src)
 }
-func (m *GetRankReq) XXX_Size() int {
-	return xxx_messageInfo_GetRankReq.Size(m)
+func (m *GetRoundReq) XXX_Size() int {
+	return xxx_messageInfo_GetRoundReq.Size(m)
 }
-func (m *GetRankReq) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetRankReq.DiscardUnknown(m)
+func (m *GetRoundReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetRoundReq.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_GetRankReq proto.InternalMessageInfo
+var xxx_messageInfo_GetRoundReq proto.InternalMessageInfo
 
-func (m *GetRankReq) GetRoundId() int64 {
+func (m *GetRoundReq) GetRoundId() int64 {
 	if m != nil {
 		return m.RoundId
 	}
 	return 0
 }
 
-type GetRankResp struct {
-	Rank                 int32    `protobuf:"varint,1,opt,name=rank,proto3" json:"rank,omitempty"`
+type GetRoundResp struct {
+	Round                *Round   `protobuf:"bytes,1,opt,name=round,proto3" json:"round,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetRankResp) Reset()         { *m = GetRankResp{} }
-func (m *GetRankResp) String() string { return proto.CompactTextString(m) }
-func (*GetRankResp) ProtoMessage()    {}
-func (*GetRankResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_player_9c6c2131ee52060f, []int{3}
+func (m *GetRoundResp) Reset()         { *m = GetRoundResp{} }
+func (m *GetRoundResp) String() string { return proto.CompactTextString(m) }
+func (*GetRoundResp) ProtoMessage()    {}
+func (*GetRoundResp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_player_7716394df972353b, []int{3}
 }
-func (m *GetRankResp) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetRankResp.Unmarshal(m, b)
+func (m *GetRoundResp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetRoundResp.Unmarshal(m, b)
 }
-func (m *GetRankResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetRankResp.Marshal(b, m, deterministic)
+func (m *GetRoundResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetRoundResp.Marshal(b, m, deterministic)
 }
-func (dst *GetRankResp) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetRankResp.Merge(dst, src)
+func (dst *GetRoundResp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetRoundResp.Merge(dst, src)
 }
-func (m *GetRankResp) XXX_Size() int {
-	return xxx_messageInfo_GetRankResp.Size(m)
+func (m *GetRoundResp) XXX_Size() int {
+	return xxx_messageInfo_GetRoundResp.Size(m)
 }
-func (m *GetRankResp) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetRankResp.DiscardUnknown(m)
+func (m *GetRoundResp) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetRoundResp.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_GetRankResp proto.InternalMessageInfo
+var xxx_messageInfo_GetRoundResp proto.InternalMessageInfo
 
-func (m *GetRankResp) GetRank() int32 {
+func (m *GetRoundResp) GetRound() *Round {
 	if m != nil {
-		return m.Rank
+		return m.Round
 	}
-	return 0
+	return nil
 }
 
-type Part struct {
+type Round struct {
 	Id                   int64                `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	ExternalId           int64                `protobuf:"varint,2,opt,name=external_id,json=externalId,proto3" json:"external_id,omitempty"`
 	Player               string               `protobuf:"bytes,3,opt,name=player,proto3" json:"player,omitempty"`
 	Status               int32                `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
-	CreatedAt            *timestamp.Timestamp `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt            *timestamp.Timestamp `protobuf:"bytes,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	CreatedAt            *timestamp.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt            *timestamp.Timestamp `protobuf:"bytes,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
+}
+
+func (m *Round) Reset()         { *m = Round{} }
+func (m *Round) String() string { return proto.CompactTextString(m) }
+func (*Round) ProtoMessage()    {}
+func (*Round) Descriptor() ([]byte, []int) {
+	return fileDescriptor_player_7716394df972353b, []int{4}
+}
+func (m *Round) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Round.Unmarshal(m, b)
+}
+func (m *Round) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Round.Marshal(b, m, deterministic)
+}
+func (dst *Round) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Round.Merge(dst, src)
+}
+func (m *Round) XXX_Size() int {
+	return xxx_messageInfo_Round.Size(m)
+}
+func (m *Round) XXX_DiscardUnknown() {
+	xxx_messageInfo_Round.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Round proto.InternalMessageInfo
+
+func (m *Round) GetId() int64 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *Round) GetExternalId() int64 {
+	if m != nil {
+		return m.ExternalId
+	}
+	return 0
+}
+
+func (m *Round) GetPlayer() string {
+	if m != nil {
+		return m.Player
+	}
+	return ""
+}
+
+func (m *Round) GetStatus() int32 {
+	if m != nil {
+		return m.Status
+	}
+	return 0
+}
+
+func (m *Round) GetCreatedAt() *timestamp.Timestamp {
+	if m != nil {
+		return m.CreatedAt
+	}
+	return nil
+}
+
+func (m *Round) GetUpdatedAt() *timestamp.Timestamp {
+	if m != nil {
+		return m.UpdatedAt
+	}
+	return nil
+}
+
+type Part struct {
+	Id                   int64                `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	RoundId              int64                `protobuf:"varint,2,opt,name=round_id,json=roundId,proto3" json:"round_id,omitempty"`
+	Player               string               `protobuf:"bytes,3,opt,name=player,proto3" json:"player,omitempty"`
+	Rank                 int64                `protobuf:"varint,4,opt,name=rank,proto3" json:"rank,omitempty"`
+	Value                int64                `protobuf:"varint,5,opt,name=value,proto3" json:"value,omitempty"`
+	Submitted            bool                 `protobuf:"varint,6,opt,name=submitted,proto3" json:"submitted,omitempty"`
+	CreatedAt            *timestamp.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt            *timestamp.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
 	XXX_unrecognized     []byte               `json:"-"`
 	XXX_sizecache        int32                `json:"-"`
@@ -193,7 +273,7 @@ func (m *Part) Reset()         { *m = Part{} }
 func (m *Part) String() string { return proto.CompactTextString(m) }
 func (*Part) ProtoMessage()    {}
 func (*Part) Descriptor() ([]byte, []int) {
-	return fileDescriptor_player_9c6c2131ee52060f, []int{4}
+	return fileDescriptor_player_7716394df972353b, []int{5}
 }
 func (m *Part) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Part.Unmarshal(m, b)
@@ -220,9 +300,9 @@ func (m *Part) GetId() int64 {
 	return 0
 }
 
-func (m *Part) GetExternalId() int64 {
+func (m *Part) GetRoundId() int64 {
 	if m != nil {
-		return m.ExternalId
+		return m.RoundId
 	}
 	return 0
 }
@@ -234,11 +314,25 @@ func (m *Part) GetPlayer() string {
 	return ""
 }
 
-func (m *Part) GetStatus() int32 {
+func (m *Part) GetRank() int64 {
 	if m != nil {
-		return m.Status
+		return m.Rank
 	}
 	return 0
+}
+
+func (m *Part) GetValue() int64 {
+	if m != nil {
+		return m.Value
+	}
+	return 0
+}
+
+func (m *Part) GetSubmitted() bool {
+	if m != nil {
+		return m.Submitted
+	}
+	return false
 }
 
 func (m *Part) GetCreatedAt() *timestamp.Timestamp {
@@ -258,8 +352,9 @@ func (m *Part) GetUpdatedAt() *timestamp.Timestamp {
 func init() {
 	proto.RegisterType((*GetPartsReq)(nil), "playerpb.GetPartsReq")
 	proto.RegisterType((*GetPartsResp)(nil), "playerpb.GetPartsResp")
-	proto.RegisterType((*GetRankReq)(nil), "playerpb.GetRankReq")
-	proto.RegisterType((*GetRankResp)(nil), "playerpb.GetRankResp")
+	proto.RegisterType((*GetRoundReq)(nil), "playerpb.GetRoundReq")
+	proto.RegisterType((*GetRoundResp)(nil), "playerpb.GetRoundResp")
+	proto.RegisterType((*Round)(nil), "playerpb.Round")
 	proto.RegisterType((*Part)(nil), "playerpb.Part")
 }
 
@@ -277,7 +372,7 @@ const _ = grpc.SupportPackageIsVersion4
 type PlayerClient interface {
 	StreamRoundEvents(ctx context.Context, in *reflexpb.StreamRequest, opts ...grpc.CallOption) (Player_StreamRoundEventsClient, error)
 	GetParts(ctx context.Context, in *GetPartsReq, opts ...grpc.CallOption) (*GetPartsResp, error)
-	GetRank(ctx context.Context, in *GetRankReq, opts ...grpc.CallOption) (*GetRankResp, error)
+	GetRound(ctx context.Context, in *GetRoundReq, opts ...grpc.CallOption) (*GetRoundResp, error)
 }
 
 type playerClient struct {
@@ -329,9 +424,9 @@ func (c *playerClient) GetParts(ctx context.Context, in *GetPartsReq, opts ...gr
 	return out, nil
 }
 
-func (c *playerClient) GetRank(ctx context.Context, in *GetRankReq, opts ...grpc.CallOption) (*GetRankResp, error) {
-	out := new(GetRankResp)
-	err := c.cc.Invoke(ctx, "/playerpb.Player/GetRank", in, out, opts...)
+func (c *playerClient) GetRound(ctx context.Context, in *GetRoundReq, opts ...grpc.CallOption) (*GetRoundResp, error) {
+	out := new(GetRoundResp)
+	err := c.cc.Invoke(ctx, "/playerpb.Player/GetRound", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -342,7 +437,7 @@ func (c *playerClient) GetRank(ctx context.Context, in *GetRankReq, opts ...grpc
 type PlayerServer interface {
 	StreamRoundEvents(*reflexpb.StreamRequest, Player_StreamRoundEventsServer) error
 	GetParts(context.Context, *GetPartsReq) (*GetPartsResp, error)
-	GetRank(context.Context, *GetRankReq) (*GetRankResp, error)
+	GetRound(context.Context, *GetRoundReq) (*GetRoundResp, error)
 }
 
 func RegisterPlayerServer(s *grpc.Server, srv PlayerServer) {
@@ -388,20 +483,20 @@ func _Player_GetParts_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Player_GetRank_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetRankReq)
+func _Player_GetRound_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRoundReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PlayerServer).GetRank(ctx, in)
+		return srv.(PlayerServer).GetRound(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/playerpb.Player/GetRank",
+		FullMethod: "/playerpb.Player/GetRound",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlayerServer).GetRank(ctx, req.(*GetRankReq))
+		return srv.(PlayerServer).GetRound(ctx, req.(*GetRoundReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -415,8 +510,8 @@ var _Player_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Player_GetParts_Handler,
 		},
 		{
-			MethodName: "GetRank",
-			Handler:    _Player_GetRank_Handler,
+			MethodName: "GetRound",
+			Handler:    _Player_GetRound_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
@@ -429,33 +524,37 @@ var _Player_serviceDesc = grpc.ServiceDesc{
 	Metadata: "player.proto",
 }
 
-func init() { proto.RegisterFile("player.proto", fileDescriptor_player_9c6c2131ee52060f) }
+func init() { proto.RegisterFile("player.proto", fileDescriptor_player_7716394df972353b) }
 
-var fileDescriptor_player_9c6c2131ee52060f = []byte{
-	// 395 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x91, 0x4d, 0x6f, 0xd3, 0x40,
-	0x10, 0x86, 0xbb, 0xf9, 0x6a, 0x3a, 0xa9, 0x8a, 0x58, 0xd1, 0x62, 0x7c, 0x69, 0xb0, 0x90, 0xf0,
-	0x01, 0x6d, 0x50, 0xe0, 0x00, 0xe2, 0x94, 0x03, 0xaa, 0x7a, 0xab, 0x16, 0xee, 0xd5, 0xba, 0x9e,
-	0x06, 0xab, 0xfe, 0xd8, 0xee, 0x8e, 0x51, 0xf9, 0x7b, 0xfc, 0x0f, 0xfe, 0x0b, 0xda, 0x0f, 0x13,
-	0x2a, 0x55, 0xca, 0x29, 0xfb, 0xce, 0x3c, 0xef, 0x64, 0x3c, 0x2f, 0x1c, 0xeb, 0x5a, 0xfd, 0x42,
-	0x23, 0xb4, 0xe9, 0xa8, 0xe3, 0xf3, 0xa0, 0x74, 0x91, 0xbe, 0xdb, 0x56, 0xf4, 0xa3, 0x2f, 0xc4,
-	0x4d, 0xd7, 0xac, 0xea, 0xbe, 0xed, 0x56, 0x06, 0x6f, 0x6b, 0x7c, 0x88, 0x3f, 0xba, 0x88, 0x8f,
-	0xe0, 0x4b, 0xcf, 0xb7, 0x5d, 0xb7, 0xad, 0x71, 0xe5, 0x55, 0xd1, 0xdf, 0xae, 0xa8, 0x6a, 0xd0,
-	0x92, 0x6a, 0x74, 0x00, 0xb2, 0x1c, 0x16, 0x17, 0x48, 0x57, 0xca, 0x90, 0x95, 0x78, 0xcf, 0x5f,
-	0xc1, 0xdc, 0x74, 0x7d, 0x5b, 0x5e, 0x57, 0x65, 0xc2, 0x96, 0x2c, 0x1f, 0xcb, 0x43, 0xaf, 0x2f,
-	0xcb, 0xec, 0x23, 0x1c, 0xef, 0x48, 0xab, 0xf9, 0x1b, 0x98, 0x6a, 0x27, 0x12, 0xb6, 0x1c, 0xe7,
-	0x8b, 0xf5, 0x89, 0x18, 0x56, 0x14, 0x8e, 0x91, 0xa1, 0x99, 0xbd, 0x05, 0xb8, 0x40, 0x92, 0xaa,
-	0xbd, 0xdb, 0x33, 0xfe, 0xb5, 0x5f, 0x24, 0x80, 0x56, 0x73, 0x0e, 0x13, 0xa3, 0xda, 0x3b, 0x4f,
-	0x4d, 0xa5, 0x7f, 0x67, 0x7f, 0x18, 0x4c, 0xdc, 0x6c, 0x7e, 0x02, 0xa3, 0x7f, 0x03, 0x46, 0x55,
-	0xc9, 0xcf, 0x61, 0x81, 0x0f, 0x84, 0xa6, 0x55, 0xb5, 0x9b, 0x3c, 0xf2, 0x0d, 0x18, 0x4a, 0x97,
-	0x25, 0x3f, 0x83, 0x59, 0xd8, 0x2e, 0x19, 0x2f, 0x59, 0x7e, 0x24, 0xa3, 0x72, 0x75, 0x4b, 0x8a,
-	0x7a, 0x9b, 0x4c, 0xfc, 0xff, 0x44, 0xc5, 0x3f, 0x03, 0xdc, 0x18, 0x54, 0x84, 0xe5, 0xb5, 0xa2,
-	0x64, 0xba, 0x64, 0xf9, 0x62, 0x9d, 0x8a, 0x70, 0x4b, 0x31, 0xdc, 0x52, 0x7c, 0x1f, 0x6e, 0x29,
-	0x8f, 0x22, 0xbd, 0x21, 0x67, 0xed, 0x75, 0x39, 0x58, 0x67, 0xfb, 0xad, 0x91, 0xde, 0xd0, 0xfa,
-	0x37, 0x83, 0xd9, 0x55, 0x58, 0x6c, 0x03, 0xcf, 0xbf, 0x91, 0x41, 0xd5, 0x48, 0x77, 0x9e, 0xaf,
-	0x3f, 0xb1, 0x25, 0xcb, 0x5f, 0x8a, 0x21, 0x64, 0x11, 0x9b, 0x78, 0xdf, 0xa3, 0xa5, 0xf4, 0xd9,
-	0xae, 0xe1, 0xd1, 0xec, 0xe0, 0x3d, 0xe3, 0x5f, 0x60, 0x3e, 0xe4, 0xc5, 0x4f, 0x77, 0xe1, 0xfc,
-	0x97, 0x76, 0x7a, 0xf6, 0x54, 0xd9, 0xea, 0xec, 0x80, 0x7f, 0x82, 0xc3, 0x98, 0x06, 0x7f, 0xf1,
-	0x08, 0x8a, 0x49, 0xa6, 0xa7, 0x4f, 0x54, 0x9d, 0xb3, 0x98, 0xf9, 0x6f, 0xfc, 0xf0, 0x37, 0x00,
-	0x00, 0xff, 0xff, 0xc3, 0x38, 0xb4, 0xce, 0xc0, 0x02, 0x00, 0x00,
+var fileDescriptor_player_7716394df972353b = []byte{
+	// 463 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x53, 0x5d, 0x6f, 0xd3, 0x30,
+	0x14, 0x6d, 0xda, 0xa6, 0x4d, 0x6f, 0xa7, 0x4d, 0x58, 0x30, 0x42, 0x84, 0xb4, 0x2a, 0x02, 0x29,
+	0x0f, 0xc8, 0x45, 0x05, 0x1e, 0x10, 0x4f, 0x7d, 0x40, 0x68, 0x6f, 0x93, 0xe1, 0x7d, 0x72, 0x16,
+	0xaf, 0x44, 0xe4, 0xc3, 0xb3, 0xaf, 0xa7, 0xf1, 0x0b, 0xf8, 0x65, 0xfc, 0x0d, 0x7e, 0x0b, 0x8a,
+	0xed, 0x2c, 0x5b, 0x01, 0x21, 0x78, 0xaa, 0xcf, 0xbd, 0xe7, 0x5c, 0xe7, 0x9c, 0x5e, 0xc3, 0x81,
+	0xac, 0xf8, 0x57, 0xa1, 0xa8, 0x54, 0x2d, 0xb6, 0x24, 0x72, 0x48, 0xe6, 0xc9, 0x8b, 0x5d, 0x89,
+	0x9f, 0x4d, 0x4e, 0x2f, 0xda, 0x7a, 0x5d, 0x99, 0xa6, 0x5d, 0x2b, 0x71, 0x59, 0x89, 0x1b, 0xff,
+	0x23, 0x73, 0x7f, 0x70, 0xba, 0xe4, 0x64, 0xd7, 0xb6, 0xbb, 0x4a, 0xac, 0x2d, 0xca, 0xcd, 0xe5,
+	0x1a, 0xcb, 0x5a, 0x68, 0xe4, 0xb5, 0x74, 0x84, 0x94, 0xc2, 0xf2, 0x83, 0xc0, 0x33, 0xae, 0x50,
+	0x33, 0x71, 0x45, 0x4e, 0x60, 0x29, 0x6e, 0x50, 0xa8, 0x86, 0x57, 0xe7, 0x65, 0x11, 0x07, 0xab,
+	0x20, 0x9b, 0x30, 0xe8, 0x4b, 0xa7, 0x45, 0xfa, 0x1a, 0x0e, 0x06, 0xbe, 0x96, 0xe4, 0x19, 0x84,
+	0xb2, 0x03, 0x71, 0xb0, 0x9a, 0x64, 0xcb, 0xcd, 0x21, 0xed, 0x3f, 0x94, 0x76, 0x1c, 0xe6, 0x9a,
+	0x69, 0x66, 0x6f, 0x61, 0xad, 0x69, 0x8a, 0xee, 0x96, 0x27, 0x10, 0xa9, 0xee, 0x3c, 0x5c, 0x31,
+	0xb7, 0xf8, 0xb4, 0x48, 0xdf, 0xd8, 0xf9, 0x9e, 0xa9, 0x25, 0x79, 0x0e, 0xa1, 0x6d, 0x59, 0xde,
+	0x72, 0x73, 0x34, 0xcc, 0x77, 0x1c, 0xd7, 0x4d, 0x7f, 0x04, 0x10, 0xda, 0x02, 0x39, 0x84, 0xf1,
+	0xed, 0xd4, 0x71, 0x59, 0xec, 0x3b, 0x1a, 0xef, 0x3b, 0x22, 0xc7, 0x30, 0x73, 0x33, 0xe3, 0xc9,
+	0x2a, 0xc8, 0x16, 0xcc, 0xa3, 0xae, 0xae, 0x91, 0xa3, 0xd1, 0xf1, 0x74, 0x15, 0x64, 0x21, 0xf3,
+	0x88, 0xbc, 0x05, 0xb8, 0x50, 0x82, 0xa3, 0x28, 0xce, 0x39, 0xc6, 0x33, 0xfb, 0x59, 0x09, 0x75,
+	0x39, 0xd3, 0x3e, 0x67, 0xfa, 0xa9, 0xcf, 0x99, 0x2d, 0x3c, 0x7b, 0x8b, 0x9d, 0xd4, 0xc8, 0xa2,
+	0x97, 0xce, 0xff, 0x2e, 0xf5, 0xec, 0x2d, 0xa6, 0xdf, 0xc6, 0x30, 0xed, 0x12, 0xfd, 0xc5, 0xdf,
+	0xdd, 0x2c, 0xc7, 0xf7, 0xb2, 0xfc, 0xa3, 0x33, 0x02, 0x53, 0xc5, 0x9b, 0x2f, 0xd6, 0xd7, 0x84,
+	0xd9, 0x33, 0x79, 0x08, 0xe1, 0x35, 0xaf, 0x8c, 0x88, 0x43, 0x5b, 0x74, 0x80, 0x3c, 0x85, 0x85,
+	0x36, 0x79, 0x5d, 0x22, 0x8a, 0xc2, 0x5a, 0x8d, 0xd8, 0x50, 0xd8, 0x4b, 0x62, 0xfe, 0xff, 0x49,
+	0x44, 0xff, 0x90, 0xc4, 0xe6, 0x7b, 0x00, 0xb3, 0x33, 0x67, 0x64, 0x0b, 0x0f, 0x3e, 0xa2, 0x12,
+	0xbc, 0xb6, 0x7f, 0xfd, 0xfb, 0x6b, 0xd1, 0xa0, 0x26, 0x8f, 0x69, 0xff, 0x14, 0xa8, 0x6f, 0x8a,
+	0x2b, 0x23, 0x34, 0x26, 0x47, 0x43, 0xc3, 0x52, 0xd3, 0xd1, 0xcb, 0x80, 0xbc, 0x83, 0xa8, 0xdf,
+	0x67, 0xf2, 0x68, 0x58, 0xae, 0x3b, 0x6f, 0x22, 0x39, 0xfe, 0x5d, 0x59, 0xcb, 0x74, 0xe4, 0xc5,
+	0x6e, 0xef, 0xee, 0x8b, 0xfb, 0x55, 0xdf, 0x13, 0xdf, 0xee, 0x75, 0x3a, 0xca, 0x67, 0xd6, 0xe6,
+	0xab, 0x9f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x70, 0xa4, 0xac, 0x13, 0xe9, 0x03, 0x00, 0x00,
 }

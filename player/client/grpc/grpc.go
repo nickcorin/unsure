@@ -3,6 +3,7 @@ package grpc
 import (
 	"context"
 	"flag"
+	"github.com/nickcorin/unsure/player/playerpb/protocp"
 
 	"github.com/luno/jettison/errors"
 	"github.com/luno/reflex"
@@ -75,26 +76,37 @@ func (c *client) StreamEvents(ctx context.Context, after string,
 }
 
 // GetParts returns a Player's parts received for a given round.
-func (c *client) GetParts(ctx context.Context, roundID int64) (
+func (c *client) GetParts(ctx context.Context, externalID int64) (
 	[]player.Part, error) {
 	res, err := c.rpcClient.GetParts(ctx, &pb.GetPartsReq{
-		RoundId: roundID,
+		ExternalId: externalID,
 	})
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get parts")
 	}
 
-	return res.Parts, nil
-}
-
-// GetRank returns a Player's rank received for a given round.
-func (c *client) GetRank(ctx context.Context, roundID int64) (int32, error) {
-	res, err := c.rpcClient.GetRank(ctx, &pb.GetRankReq{
-		RoundId: roundID,
-	})
-	if err != nil {
-		return 0, errors.Wrap(err, "failed to get rank")
+	// Convert proto parts to internal types.
+	var parts []player.Part
+	for _, protoPart := range res.Parts {
+		p, err := protocp.PartFromProto(protoPart)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to convert part from proto")
+		}
+		parts = append(parts, *p)
 	}
 
-	return res.Rank, nil
+	return parts, nil
+}
+
+// GetRound returns a local rounds from a Player's DB.
+func (c *client) GetRound(ctx context.Context, roundID int64) (
+	*player.Round, error) {
+		res, err := c.rpcClient.GetRound(ctx, &pb.GetRoundReq{
+			RoundId: roundID,
+		})
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to get round")
+		}
+		
+		return protocp.RoundFromProto(res.Round)
 }

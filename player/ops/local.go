@@ -2,7 +2,6 @@ package ops
 
 import (
 	"context"
-	"database/sql"
 	"github.com/luno/fate"
 	"github.com/luno/jettison/errors"
 	"github.com/luno/jettison/j"
@@ -63,7 +62,7 @@ func joinRounds(b Backends) reflex.Consumer {
 	return reflex.NewConsumer(player.ConsumerJoinRounds, f)
 }
 
-func collectParts(b Backends) reflex.Consumer {
+func collectEngineParts(b Backends) reflex.Consumer {
 	f := func(ctx context.Context, fate fate.Fate, e *reflex.Event) error {
 		// Skip uninteresting events.
 		if !reflex.IsType(e.Type, player.RoundStatusCollect) {
@@ -89,36 +88,34 @@ func collectParts(b Backends) reflex.Consumer {
 			return errors.Wrap(err, "failed to collect parts",
 				j.KV("external_id", r.ExternalID))
 		}
+		
 
-		// Store the parts.
+		// Convert collected data into parts, adding rank where possible.
+		var pl []player.Part
 		for _, p := range data.Players {
-			_, err := parts.LookupByRoundAndPlayer(ctx, b.PlayerDB(),
-				r.ID, p.Name)
-			if err == nil {
-				// Skip if the part exists.
-				continue
-			} else if !errors.Is(err, sql.ErrNoRows) && err != nil {
-				// Return the error if its unexpected.
-				return errors.Wrap(err, "failed to lookup part",
-					j.KV("round", r.ID), j.KV("player", p.Name))
-			}
-
-			// Insert the part with rank if it's your own part.
-			if strings.EqualFold(p.Name, *playerName) {
-				_, err = parts.CreateWithRank(ctx, b.PlayerDB(), r.ID, p.Name,
-					int64(data.Rank), int64(p.Part))
-				if err != nil {
-					return errors.Wrap(err, "failed to insert part")
-				}
+			if strings.EqualFold(*playerName, p.Name) {
+				pl = append(pl, player.Part{
+					RoundID:   r.ID,
+					Player:    p.Name,
+					Rank:      int64(data.Rank),
+					Value:     int64(p.Part),
+				})
 			} else {
-				_, err = parts.Create(ctx, b.PlayerDB(), r.ID, p.Name,
-					int64(p.Part))
-				if err != nil {
-					return errors.Wrap(err, "failed to insert part")
-				}
+				pl = append(pl, player.Part{
+					RoundID:   r.ID,
+					Player:    p.Name,
+					Value:     int64(p.Part),
+				})
 			}
 		}
-		
+
+		// Store the collected parts.
+		err = parts.CreateBatch(ctx, b.PlayerDB(), pl)
+		if err != nil {
+			return errors.Wrap(err, "failed to insert parts",
+				j.KV("external_id", r.ExternalID))
+		}
+
 		// Shift the round to RoundStatusCollected.
 		err = rounds.ShiftToCollected(ctx, b.PlayerDB(), r.ID)
 		if err != nil {
@@ -129,5 +126,59 @@ func collectParts(b Backends) reflex.Consumer {
 		return fate.Tempt()
 	}
 
-	return reflex.NewConsumer(player.ConsumerCollectParts, f)
+	return reflex.NewConsumer(player.ConsumerCollectEngineParts, f)
+}
+
+func submitParts(b Backends) reflex.Consumer {
+	f := func(ctx context.Context, fate fate.Fate, e *reflex.Event) error {
+		// Skip uninteresting events.
+		if !reflex.IsType(e.Type, player.RoundStatusSubmit) {
+			return fate.Tempt()
+		}
+
+		// Lookup round.
+		r, err := rounds.Lookup(ctx, b.PlayerDB(), e.ForeignIDInt())
+		if err != nil {
+			return errors.Wrap(err, "failed to lookup round",
+				j.KV("round", e.ForeignIDInt()))
+		}
+
+		// Skip uninteresting states.
+		if r.Status != player.RoundStatusSubmit {
+			return fate.Tempt()
+		}
+
+		// List all parts for the round.
+		pl, err := parts.ListByRound(ctx, b.PlayerDB(), r.ID)
+		if err != nil {
+			return errors.Wrap(err, "failed to list parts for round",
+				j.KV("round", r.ID))
+		}
+
+		// Sum all of our parts.
+		var total int64
+		for _, p := range pl {
+			if strings.EqualFold(p.Player, *playerName) && !p.Submitted {
+				total += p.Value
+			}
+		}
+
+		// Submit the round.
+		err = b.EngineClient().SubmitRound(ctx, *teamName, *playerName,
+			r.ExternalID, int(total))
+		if err != nil {
+			return errors.Wrap(err, "failed to submit parts")
+		}
+
+		// Mark parts as submitted.
+		err = parts.MarkAsSubmitted(ctx, b.PlayerDB(), r.ID, *playerName)
+		if err != nil {
+			return errors.Wrap(err, "failed to mark parts as submitted",
+				j.KV("round", r.ID))
+		}
+
+		return fate.Tempt()
+	}
+	
+	return reflex.NewConsumer(player.ConsumerSubmitParts, f)
 }

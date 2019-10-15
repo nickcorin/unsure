@@ -75,3 +75,34 @@ func notifyToCollect(b Backends) reflex.Consumer {
 
 	return reflex.NewConsumer(player.ConsumerNotifyToCollect, f)
 }
+
+func notifyToSubmit(b Backends) reflex.Consumer {
+	f := func(ctx context.Context, fate fate.Fate, e *reflex.Event) error {
+		// Skip uninteresting events.
+		if !reflex.IsType(e.Type, engine.EventTypeRoundSubmit) {
+			return fate.Tempt()
+		}
+
+		// Lookup the round.
+		r, err := rounds.LookupByExternalID(ctx, b.PlayerDB(), e.ForeignIDInt())
+		if err != nil {
+			return errors.Wrap(err, "failed to lookup round",
+				j.KV("external_id", e.ForeignIDInt()))
+		}
+
+		// Skip uninteresting states.
+		if r.Status != player.RoundStatusCollected {
+			return fate.Tempt()
+		}
+
+		// Shift the round to RoundStatusSubmit.
+		err = maybeReadyToSubmit(ctx, b, fate, r.ID)
+		if err != nil {
+			return errors.Wrap(err, "failed to check if player should submit")
+		}
+
+		return fate.Tempt()
+	}
+	
+	return reflex.NewConsumer(player.ConsumerNotifyToSubmit, f)
+}

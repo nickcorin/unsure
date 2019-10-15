@@ -3,7 +3,6 @@ create table rounds (
     external_id bigint not null,
     player varchar (255),
     `status` int not null,
-    submitted int not null,
     created_at datetime not null,
     updated_at datetime not null,
     
@@ -25,7 +24,9 @@ create table parts (
     player varchar(255) not null,
     value int not null,
     rank int,
+    submitted bool not null,
     created_at datetime not null,
+    updated_at datetime not null,
 
     primary key(id)
 );

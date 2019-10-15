@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5835794d-0f3b-4ce6-9e88-6d31625d4176" name="Default Changelist" comment="" />
+    <list default="true" id="5835794d-0f3b-4ce6-9e88-6d31625d4176" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/unsure.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/unsure.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/api.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/client/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/client/client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/client/grpc/grpc.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/client/grpc/grpc.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/consumers.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/consumers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/internal/db/parts/parts.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/internal/db/parts/parts.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/internal/db/rounds/rounds.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/internal/db/rounds/rounds.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/internal/db/rounds/shift.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/internal/db/rounds/shift.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/internal/db/rounds/shift_gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/internal/db/rounds/shift_gen.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/internal/db/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/player/internal/db/schema.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/ops/engine.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/ops/engine.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/ops/local.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/ops/local.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/ops/loops.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/ops/loops.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/ops/peer.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/ops/peer.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/playerpb/player.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/playerpb/player.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/playerpb/player.proto" beforeDir="false" afterPath="$PROJECT_DIR$/player/playerpb/player.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/playerpb/protocp/player.protocp.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/playerpb/protocp/player.protocp.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/server/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/types.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/types.go" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +76,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

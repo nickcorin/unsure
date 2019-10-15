@@ -93,7 +93,7 @@ func ShiftToSubmitted(ctx context.Context, dbc *sql.DB, id int64) error {
 	}
 
 	return roundsFSM.Update(ctx, dbc, r.Status, player.RoundStatusSubmitted,
-		submitted{ID: id, Submitted: r.Submitted + 1})
+		empty{ID: id})
 }
 
 // ShiftToSuccess attempts to shift a Round into player.RoundStatusSuccess.
@@ -120,7 +120,7 @@ func ShiftToFailed(ctx context.Context, dbc *sql.DB, id int64) error {
 
 func scan(row row) (*player.Round, error) {
 	var r player.Round
-	err := row.Scan(&r.ID, &r.ExternalID, &r.Player, &r.Status, &r.Submitted,
+	err := row.Scan(&r.ID, &r.ExternalID, &r.Player, &r.Status,
 		&r.CreatedAt, &r.UpdatedAt)
 	if err != nil {
 		return nil, err

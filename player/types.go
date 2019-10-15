@@ -72,7 +72,6 @@ type Round struct {
 	// Unique player name.
 	Player    string
 	Status    RoundStatus
-	Submitted int64
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -88,6 +87,7 @@ type Part struct {
 	Player  string
 	Rank  int64
 	Value int64
+	Submitted bool
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

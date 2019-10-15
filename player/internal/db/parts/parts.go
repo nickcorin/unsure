@@ -8,7 +8,8 @@ import (
 	"github.com/nickcorin/unsure/player"
 )
 
-const cols = "id round_id name coalesce(rank, 0) value created_at"
+const cols = "id round_id name coalesce(rank, 0) value submitted created_at " +
+	"updated_at"
 
 // Create inserts a new part record into the parts table.
 func Create(ctx context.Context, dbc *sql.DB, roundID int64, player string,
@@ -37,11 +38,38 @@ func CreateWithRank(ctx context.Context, dbc *sql.DB, roundID int64,
 	return r.LastInsertId()
 }
 
-// SetRank updates a parts rank.
-func SetRank(ctx context.Context, dbc *sql.DB, roundID int64, player string,
+func CreateBatch(ctx context.Context, dbc *sql.DB, pl []player.Part) error {
+	tx, err := dbc.Begin()
+	if err != nil {
+		return errors.Wrap(err, "failed to start db transaction")
+	}
+	defer tx.Rollback()
+
+	for _, p := range pl {
+		_, err := tx.ExecContext(ctx, "insert into parts set " +
+			"round_id=?, player=?, value=?, created_at=now(), updated_at=now()",
+			p.RoundID, p.Player, p.Value)
+		if err != nil {
+			return errors.Wrap(err, "failed to insert part")
+		}
+
+		if p.Rank != 0 {
+			err = SetRankTx(ctx, tx, p.RoundID, p.Player, p.Rank)
+			if err != nil {
+				return errors.Wrap(err, "failed to set rank")
+			}
+		}
+	}
+
+	return tx.Commit()
+}
+
+// SetRankTx updates a parts rank, within a transaction.
+func SetRankTx(ctx context.Context, tx *sql.Tx, roundID int64, player string,
 	rank int64) error {
-	_, err := dbc.ExecContext(ctx, "insert into parts set " +
-		"rank=? where id=? and player=?", rank, roundID, player)
+	_, err := tx.ExecContext(ctx, "insert into parts set " +
+		"rank=?, updated_at=now() where id=? and player=?", rank, roundID,
+		player)
 	if err != nil {
 		return errors.Wrap(err, "failed to set rank")
 	}
@@ -55,9 +83,9 @@ func Lookup(ctx context.Context, dbc *sql.DB, id int64) (*player.Part, error) {
 		"where id=?", id))
 }
 
-// LookupByRoundAndPlayer queries parts associated with a given round and
+// ListByRoundAndPlayer queries parts associated with a given round and
 // player.
-func LookupByRoundAndPlayer(ctx context.Context, dbc *sql.DB, roundID int64,
+func ListByRoundAndPlayer(ctx context.Context, dbc *sql.DB, roundID int64,
 	player string) ([]player.Part, error) {
 	return list(ctx, dbc, "select "+cols+" from parts where round_id=? and " +
 		"player=?", roundID, player)
@@ -66,8 +94,31 @@ func LookupByRoundAndPlayer(ctx context.Context, dbc *sql.DB, roundID int64,
 // ListByRound returns a list of parts associated with a given round.
 func ListByRound(ctx context.Context, dbc *sql.DB, roundID int64) (
 	[]player.Part, error) {
-	return list(ctx, dbc, "select "+cols+" from parts where round_id=?",
+	return list(ctx, dbc, "select "+cols+" from parts where round_id=? " +
+		"order by rank asc",
 		roundID)
+}
+
+func LookupRankByPlayer(ctx context.Context, dbc *sql.DB, roundID int64,
+	player string) (int64, error) {
+		r, err := scan(dbc.QueryRowContext(ctx, "select "+cols+" where " +
+			"round_id=? and player=? and rank is not null", roundID, player))
+		if err != nil {
+			return 0, errors.Wrap(err, "failed to lookup part")
+		}
+
+		return r.Rank, nil
+}
+
+func MarkAsSubmitted(ctx context.Context, dbc *sql.DB, roundID int64,
+	player string) error {
+	_, err := dbc.ExecContext(ctx, "update parts set submitted=true, "+
+		"updated_at=now() where round_id=? and player=?", roundID, player)
+	if err != nil {
+		return errors.Wrap(err, "failed to mark parts as submitted")
+	}
+
+	return nil
 }
 
 func list(ctx context.Context, dbc *sql.DB, query string, args ...interface{}) (
@@ -93,7 +144,7 @@ func list(ctx context.Context, dbc *sql.DB, query string, args ...interface{}) (
 func scan(row row) (*player.Part, error) {
 	var p player.Part
 	err := row.Scan(&p.ID, &p.RoundID, &p.Player, &p.Rank, &p.Value,
-		&p.CreatedAt, &p.UpdatedAt)
+		&p.Submitted, &p.CreatedAt, &p.UpdatedAt)
 	if err != nil {
 		return nil, err
 	}

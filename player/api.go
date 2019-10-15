@@ -14,8 +14,8 @@ type Client interface {
 		opts ...reflex.StreamOption) (reflex.StreamClient, error)
 
 	// GetParts returns a Player's parts received for a given round.
-	GetParts(ctx context.Context, roundID int) ([]Part, error)
+	GetParts(ctx context.Context, externalID int64) ([]Part, error)
 
-	// GetRank returns a Player's rank received for a given round.
-	GetRank(ctx context.Context, roundID int) (int, error)
+	// GetRound returns a local rounds from a Player's DB.
+	GetRound(ctx context.Context, roundID int64) (*Round, error)
 }

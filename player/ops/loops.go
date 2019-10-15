@@ -5,6 +5,7 @@ import (
 	"github.com/corverroos/unsure"
 	"github.com/luno/reflex"
 	"github.com/luno/reflex/rpatterns"
+	"github.com/nickcorin/unsure/player"
 	"github.com/nickcorin/unsure/player/internal/db/cursors"
 	"github.com/nickcorin/unsure/player/internal/db/rounds"
 )
@@ -16,11 +17,21 @@ var (
 
 // StartLoops begins running reflex consumers in separate goroutines.
 func StartLoops(b Backends) {
+	// Unsure Engine events.
 	go notifyToJoinForever(b)
 	go notifyToCollectForever(b)
+	go notifyToSubmitForever(b)
 
+	// Local events.
 	go joinRoundsForever(b)
-	go collectPartsForever(b)
+	go collectEnginePartsForever(b)
+	go submitPartsForever(b)
+	
+	// Peer events.
+	for _, p := range b.Peers() {
+		go collectPeerPartsForever(b, p)
+		go acknowledgePeerSubmissionsForever(b, p)
+	}
 }
 
 func notifyToJoinForever(b Backends) {
@@ -41,6 +52,15 @@ func notifyToCollectForever(b Backends) {
 		consumer)
 }
 
+func notifyToSubmitForever(b Backends) {
+	consumable := reflex.NewConsumable(b.EngineClient().Stream,
+		cursors.Store(b.PlayerDB()))
+	consumer := notifyToSubmit(b)
+
+	rpatterns.ConsumeForever(unsure.FatedContext, consumable.Consume,
+		consumer)
+}
+
 func joinRoundsForever(b Backends) {
 	consumable := reflex.NewConsumable(rounds.EventStream(b.PlayerDB()),
 		cursors.Store(b.PlayerDB()))
@@ -50,10 +70,37 @@ func joinRoundsForever(b Backends) {
 		consumer)
 }
 
-func collectPartsForever(b Backends) {
+func collectEnginePartsForever(b Backends) {
 	consumable := reflex.NewConsumable(rounds.EventStream(b.PlayerDB()),
 		cursors.Store(b.PlayerDB()))
-	consumer := collectParts(b)
+	consumer := collectEngineParts(b)
+
+	rpatterns.ConsumeForever(unsure.FatedContext, consumable.Consume,
+		consumer)
+}
+
+func submitPartsForever(b Backends) {
+	consumable := reflex.NewConsumable(rounds.EventStream(b.PlayerDB()),
+		cursors.Store(b.PlayerDB()))
+	consumer := submitParts(b)
+
+	rpatterns.ConsumeForever(unsure.FatedContext, consumable.Consume,
+		consumer)
+}
+
+func collectPeerPartsForever(b Backends, p player.Client) {
+	consumable := reflex.NewConsumable(p.StreamEvents,
+		cursors.Store(b.PlayerDB()))
+	consumer := collectPeerParts(b, p)
+
+	rpatterns.ConsumeForever(unsure.FatedContext, consumable.Consume,
+		consumer)
+}
+
+func acknowledgePeerSubmissionsForever(b Backends, p player.Client) {
+	consumable := reflex.NewConsumable(p.StreamEvents,
+		cursors.Store(b.PlayerDB()))
+	consumer := acknowledgePeerSubmissions(b, p)
 
 	rpatterns.ConsumeForever(unsure.FatedContext, consumable.Consume,
 		consumer)

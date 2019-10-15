@@ -74,40 +74,6 @@ func (一 joined) Update(ctx context.Context, tx *sql.Tx,from shift.Status,
 }
 
 // Update updates the status of a rounds table entity. All the fields of the
-// submitted receiver are updated, as well as status and updated_at. 
-// The entity id is returned on success or an error.
-func (一 submitted) Update(ctx context.Context, tx *sql.Tx,from shift.Status, 
-	to shift.Status) (int64, error) {
-	var (
-		q    strings.Builder
-		args []interface{}
-	)
-
-	q.WriteString("update rounds set `status`=?, `updated_at`=? ")
-	args = append(args, to.Enum(), time.Now())
-
-	q.WriteString(", `submitted`=?")
-	args = append(args, 一.Submitted)
-
-	q.WriteString(" where `id`=? and `status`=?")
-	args = append(args, 一.ID, from.Enum())
-
-	res, err := tx.ExecContext(ctx, q.String(), args...)
-	if err != nil {
-		return 0, err
-	}
-	n, err := res.RowsAffected()
-	if err != nil {
-		return 0, err
-	}
-	if n != 1 {
-		return 0, errors.Wrap(shift.ErrRowCount, "submitted", j.KV("count", n))
-	}
-
-	return 一.ID, nil
-}
-
-// Update updates the status of a rounds table entity. All the fields of the
 // empty receiver are updated, as well as status and updated_at. 
 // The entity id is returned on success or an error.
 func (一 empty) Update(ctx context.Context, tx *sql.Tx,from shift.Status, 

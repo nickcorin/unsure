@@ -6,7 +6,7 @@ import (
 	"github.com/nickcorin/unsure/player"
 )
 
-//go:generate shiftgen -inserter=join -updaters=joined,submitted,empty -table=rounds
+//go:generate shiftgen -inserter=join -updaters=joined,empty -table=rounds
 
 var roundsFSM = shift.NewFSM(events).
 	Insert(player.RoundStatusJoin, join{}, player.RoundStatusJoined,
@@ -19,7 +19,7 @@ var roundsFSM = shift.NewFSM(events).
 		player.RoundStatusFailed).
 	Update(player.RoundStatusSubmit, empty{}, player.RoundStatusSubmitted,
 		player.RoundStatusFailed).
-	Update(player.RoundStatusSubmitted, submitted{}, player.RoundStatusSuccess,
+	Update(player.RoundStatusSubmitted, empty{}, player.RoundStatusSuccess,
 		player.RoundStatusFailed).
 	Update(player.RoundStatusSuccess, empty{}).
 	Update(player.RoundStatusFailed, empty{}).
@@ -32,11 +32,6 @@ type join struct {
 type joined struct {
 	ID     int64
 	Player string
-}
-
-type submitted struct {
-	ID        int64
-	Submitted int64
 }
 
 type empty struct {
