@@ -59,5 +59,5 @@ func NewGRPCServer(address string) (*GRPCServer, error) {
 
 // NewGRPCClient returns a client connection to the given url.
 func NewGRPCClient(url string) (*grpc.ClientConn, error) {
-	return grpc.Dial(url)
+	return grpc.Dial(url, grpc.WithInsecure())
 }

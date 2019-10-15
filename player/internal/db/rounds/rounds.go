@@ -19,7 +19,8 @@ func EventStream(dbc *sql.DB) reflex.StreamFunc {
 	return events.ToStream(dbc)
 }
 
-const cols = "id external_id coalesce(player, \"\") status created_at updated_at"
+const cols = "id, external_id, coalesce(player, ''), status, created_at," +
+	" updated_at"
 
 // Lookup queries a round by id.
 func Lookup(ctx context.Context, dbc *sql.DB, id int64) (*player.Round, error) {

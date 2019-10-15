@@ -3,8 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="5835794d-0f3b-4ce6-9e88-6d31625d4176" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/player/ops/local.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/ops/local.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/build/player.sh" beforeDir="false" afterPath="$PROJECT_DIR$/player/build/player.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/internal/db/connect.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/internal/db/connect.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/internal/db/cursors/cursors.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/internal/db/cursors/cursors.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/internal/db/parts/parts.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/internal/db/parts/parts.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/internal/db/rounds/rounds.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/internal/db/rounds/rounds.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/internal/db/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/player/internal/db/schema.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/ops/engine.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/ops/engine.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/player/ops/loops.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/ops/loops.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/player/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/player/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/server/grpc.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/server/grpc.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

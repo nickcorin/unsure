@@ -17,7 +17,7 @@ var playerDB = flag.String("player_db", "", "Player DB URI")
 var recreateSchema = flag.Bool("recreate_schema", true,
 	"Recreate the Player DB")
 
-const defaultOptions = "?parseTime=true"
+const defaultOptions = "?parseTime=true&interpolateParams=true"
 
 // Connect attempts to create a connection to the MySQL database provided
 // by the "player_db" flag.
@@ -58,7 +58,7 @@ func maybeRecreateSchema() error {
 	// Create new database.
 	err = executeQuery("create database "+conf.DBName+";", conf)
 	if err != nil {
-		return errors.Wrap(err, "failed to drop database")
+		return errors.Wrap(err, "failed to create database")
 	}
 
 	// Read schema.sql file.
@@ -68,12 +68,12 @@ func maybeRecreateSchema() error {
 	}
 
 	// Create schema.
-	err = executeQuery(string(schema), conf)
+	err = executeQuery("use "+conf.DBName+";"+string(schema), conf)
 	if err != nil {
-		return errors.Wrap(err, "failed to drop database")
+		return errors.Wrap(err, "failed to create schema")
 	}
 
-	return errors.New("not implemented")
+	return nil
 }
 
 func executeQuery(query string, conf *mysql.Config) error {
@@ -81,6 +81,7 @@ func executeQuery(query string, conf *mysql.Config) error {
 	if conf.User != "" {
 		args = append(args, "-u", conf.User)
 	}
+
 	if conf.Passwd != "" {
 		args = append(args, "-p", conf.Passwd)
 	}

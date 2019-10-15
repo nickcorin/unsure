@@ -1,7 +1,6 @@
 package ops
 
 import (
-	"context"
 	"flag"
 	"github.com/corverroos/unsure"
 	"github.com/corverroos/unsure/engine"
@@ -15,8 +14,9 @@ import (
 )
 
 var (
-	teamName = flag.String("team_name", "", "Name of the team")
+	teamName   = flag.String("team_name", "", "Name of the team")
 	playerName = flag.String("player_name", "", "Name of the player")
+	debug      = flag.Bool("debug", false, "Enable debug mode")
 )
 
 // StartLoops begins running reflex consumers in separate goroutines.
@@ -34,7 +34,7 @@ func StartLoops(b Backends) {
 	go joinRoundsForever(b)
 	go collectEnginePartsForever(b)
 	go submitPartsForever(b)
-	
+
 	// Peer events.
 	for _, p := range b.Peers() {
 		go collectPeerPartsForever(b, p)
@@ -43,13 +43,13 @@ func StartLoops(b Backends) {
 }
 
 func startMatchesForever(b Backends) {
-	ctx := context.Background()
 	for {
-		err := b.EngineClient().StartMatch(ctx, *teamName, len(b.Peers()))
+		err := b.EngineClient().StartMatch(unsure.FatedContext(),
+			*teamName, len(b.Peers()))
 		if errors.Is(err, engine.ErrActiveMatch) {
 			break
 		} else if err != nil {
-			log.Error(ctx, err)
+			log.Error(unsure.FatedContext(), err)
 		}
 	}
 }
@@ -134,4 +134,3 @@ func acknowledgePeerSubmissionsForever(b Backends, p player.Client) {
 	rpatterns.ConsumeForever(unsure.FatedContext, consumable.Consume,
 		consumer)
 }
-

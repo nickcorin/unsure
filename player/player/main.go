@@ -1,7 +1,12 @@
 package main
 
 import (
+	"context"
 	"flag"
+	"github.com/nickcorin/unsure/player/ops"
+	"os"
+	"os/signal"
+	"time"
 
 	"github.com/luno/jettison/errors"
 	"github.com/luno/jettison/log"
@@ -9,7 +14,6 @@ import (
 	"github.com/nickcorin/unsure/player/playerpb"
 	"github.com/nickcorin/unsure/player/server"
 	"github.com/nickcorin/unsure/player/state"
-	"github.com/nickcorin/unsure/player/ops"
 )
 
 var grpcAddress = flag.String("grpc_address", "", "player grpc address")
@@ -22,17 +26,34 @@ func main() {
 		log.Fatal(errors.Wrap(err, "failed to create player state"))
 	}
 
-	go serveGRPCForever(s)
-	ops.StartLoops(s)
-}
-
-func serveGRPCForever(s *state.State) {
 	grpcSrv, err := server.NewGRPCServer(*grpcAddress)
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "failed to create grpc server"))
 	}
 
+	// Register player gRPC server.
 	playerpb.RegisterPlayerServer(grpcSrv.GRPCServer(), server.New(s))
 
-	log.Fatal(grpcSrv.ServeForever())
+	// Serve forever.
+	go func() {
+		log.Fatal(grpcSrv.ServeForever())
+	}()
+
+	// Start event loops.
+	ops.StartLoops(s)
+
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+
+	// Block until we receive interrupt.
+	<-c
+
+	// Wait for deadline.
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second * 15)
+	defer cancel()
+
+	// Gracefully shutdown.
+	grpcSrv.Stop()
+	log.Info(ctx, "Shutting down")
+	os.Exit(0)
 }

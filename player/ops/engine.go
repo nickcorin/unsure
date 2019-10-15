@@ -3,13 +3,14 @@ package ops
 import (
 	"context"
 	"database/sql"
-	"github.com/luno/jettison/errors"
-	"github.com/luno/jettison/j"
-	"github.com/nickcorin/unsure/player/internal/db/rounds"
 
 	"github.com/corverroos/unsure/engine"
 	"github.com/luno/fate"
+	"github.com/luno/jettison/errors"
+	"github.com/luno/jettison/j"
+	"github.com/luno/jettison/log"
 	"github.com/luno/reflex"
+	"github.com/nickcorin/unsure/player/internal/db/rounds"
 
 	"github.com/nickcorin/unsure/player"
 )
@@ -21,12 +22,17 @@ func notifyToJoin(b Backends) reflex.Consumer {
 			return fate.Tempt()
 		}
 
+		if *debug {
+			log.Info(ctx, "Round join request from Engine",
+				j.KV("round", e.ForeignIDInt()))
+		}
+
 		// Lookup current round.
 		_, err := rounds.Lookup(ctx, b.PlayerDB(), e.ForeignIDInt())
 		if err == nil {
 			// Skip if the round has already been created.
 			return fate.Tempt()
-		} else if errors.Is(err, sql.ErrNoRows) && err != nil {
+		} else if !errors.Is(err, sql.ErrNoRows) && err != nil {
 			// Return the error if it's unexpected.
 			return errors.Wrap(err, "failed to lookup round")
 		}
@@ -40,7 +46,7 @@ func notifyToJoin(b Backends) reflex.Consumer {
 
 		return fate.Tempt()
 	}
-	
+
 	return reflex.NewConsumer(player.ConsumerNotifyToJoin, f)
 }
 
@@ -49,6 +55,11 @@ func notifyToCollect(b Backends) reflex.Consumer {
 		// Skip uninteresting events.
 		if !reflex.IsType(e.Type, engine.EventTypeRoundCollect) {
 			return fate.Tempt()
+		}
+
+		if *debug {
+			log.Info(ctx, "Round collect request from Engine",
+				j.KV("round", e.ForeignIDInt()))
 		}
 
 		// Lookup the round.
@@ -82,6 +93,10 @@ func notifyToSubmit(b Backends) reflex.Consumer {
 		if !reflex.IsType(e.Type, engine.EventTypeRoundSubmit) {
 			return fate.Tempt()
 		}
+		if *debug {
+			log.Info(ctx, "Round submit request from Engine",
+				j.KV("round", e.ForeignIDInt()))
+		}
 
 		// Lookup the round.
 		r, err := rounds.LookupByExternalID(ctx, b.PlayerDB(), e.ForeignIDInt())
@@ -103,7 +118,7 @@ func notifyToSubmit(b Backends) reflex.Consumer {
 
 		return fate.Tempt()
 	}
-	
+
 	return reflex.NewConsumer(player.ConsumerNotifyToSubmit, f)
 }
 
@@ -112,12 +127,19 @@ func notifyRoundCompletion(b Backends) reflex.Consumer {
 		// Skip uninteresting events.
 		if reflex.IsAnyType(e.Type, engine.EventTypeRoundSuccess,
 			engine.EventTypeRoundFailed) {
-				return fate.Tempt()
+			return fate.Tempt()
+		}
+
+		if *debug {
+			log.Info(ctx, "Round completed notification from Engine",
+				j.KV("round", e.ForeignIDInt()))
 		}
 
 		// Lookup the round.
 		r, err := rounds.LookupByExternalID(ctx, b.PlayerDB(), e.ForeignIDInt())
-		if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return fate.Tempt()
+		} else if err != nil {
 			return errors.Wrap(err, "failed to lookup round",
 				j.KV("round", e.ForeignIDInt()))
 		}

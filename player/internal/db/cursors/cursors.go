@@ -7,7 +7,7 @@ import (
 	"github.com/luno/reflex/rsql"
 )
 
-var cursors = rsql.NewCursorsTable("player_cursors")
+var cursors = rsql.NewCursorsTable("cursors")
 
 // Store returns the reflex.CursorStore for our cursors table.
 func Store(dbc *sql.DB) reflex.CursorStore {

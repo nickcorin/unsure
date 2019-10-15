@@ -6,7 +6,7 @@ create table rounds (
     created_at datetime not null,
     updated_at datetime not null,
     
-    primary key(id),
+    primary key(id)
 );
 
 create table round_events (
