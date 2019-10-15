@@ -2,12 +2,11 @@ package server
 
 import (
 	"context"
-	"net"
-
 	"github.com/luno/jettison/errors"
 	"github.com/luno/jettison/j"
 	"github.com/luno/jettison/log"
 	"google.golang.org/grpc"
+	"net"
 )
 
 // GRPCServer wraps a grpc.Server.

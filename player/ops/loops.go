@@ -2,12 +2,16 @@ package ops
 
 import (
 	"flag"
+	"time"
+
 	"github.com/corverroos/unsure"
 	"github.com/corverroos/unsure/engine"
 	"github.com/luno/jettison/errors"
+	"github.com/luno/jettison/j"
 	"github.com/luno/jettison/log"
 	"github.com/luno/reflex"
 	"github.com/luno/reflex/rpatterns"
+
 	"github.com/nickcorin/unsure/player"
 	"github.com/nickcorin/unsure/player/internal/db/cursors"
 	"github.com/nickcorin/unsure/player/internal/db/rounds"
@@ -21,8 +25,31 @@ var (
 
 // StartLoops begins running reflex consumers in separate goroutines.
 func StartLoops(b Backends) {
-	// Start matches on the Unreal Engine.
-	go startMatchesForever(b)
+	connectedPeers := 0
+
+	// Ping all peers to ensure the connection.
+	for _, p := range b.Peers() {
+		go func(peer player.Client) {
+			for {
+				if err := peer.Ping(unsure.FatedContext()); err != nil {
+					time.Sleep(time.Second)
+					continue
+				}
+				connectedPeers++
+				log.Info(unsure.FatedContext(), "Peer connected.")
+				break
+			}
+		}(p)
+	}
+
+	// Wait for all peers to be connected.
+	for {
+		if connectedPeers < len(b.Peers()) {
+			log.Info(unsure.FatedContext(), "Waiting for peers to connect...")
+			time.Sleep(time.Second * 5)
+		}
+		break
+	}
 
 	// Unsure Engine events.
 	go notifyToJoinForever(b)
@@ -35,11 +62,17 @@ func StartLoops(b Backends) {
 	go collectEnginePartsForever(b)
 	go submitPartsForever(b)
 
+	if *debug {
+		log.Info(unsure.FatedContext(), "Connecting to peers",
+			j.KV("peers", len(b.Peers())))
+	}
+
 	// Peer events.
 	for _, p := range b.Peers() {
 		go collectPeerPartsForever(b, p)
 		go acknowledgePeerSubmissionsForever(b, p)
 	}
+
 }
 
 func startMatchesForever(b Backends) {
@@ -60,7 +93,7 @@ func notifyToJoinForever(b Backends) {
 	consumer := notifyToJoin(b)
 
 	rpatterns.ConsumeForever(unsure.FatedContext, consumable.Consume,
-		consumer)
+		consumer, reflex.WithStreamFromHead())
 }
 
 func notifyToCollectForever(b Backends) {
@@ -69,7 +102,7 @@ func notifyToCollectForever(b Backends) {
 	consumer := notifyToCollect(b)
 
 	rpatterns.ConsumeForever(unsure.FatedContext, consumable.Consume,
-		consumer)
+		consumer, reflex.WithStreamFromHead())
 }
 
 func notifyToSubmitForever(b Backends) {
@@ -78,7 +111,7 @@ func notifyToSubmitForever(b Backends) {
 	consumer := notifyToSubmit(b)
 
 	rpatterns.ConsumeForever(unsure.FatedContext, consumable.Consume,
-		consumer)
+		consumer, reflex.WithStreamFromHead())
 }
 
 func notifyRoundCompletionForever(b Backends) {
@@ -87,7 +120,7 @@ func notifyRoundCompletionForever(b Backends) {
 	consumer := notifyRoundCompletion(b)
 
 	rpatterns.ConsumeForever(unsure.FatedContext, consumable.Consume,
-		consumer)
+		consumer, reflex.WithStreamFromHead())
 }
 
 func joinRoundsForever(b Backends) {

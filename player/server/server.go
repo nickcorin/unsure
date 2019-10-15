@@ -32,6 +32,11 @@ func New(b Backends) *Server {
 	}
 }
 
+// Ping returns an empty response.
+func (srv *Server) Ping(ctx context.Context, req *pb.Empty) (*pb.Empty, error) {
+	return req, nil
+}
+
 // StreamRoundEvents returns a reflex.StreamClient that can be used to
 // stream reflex events from a Player.
 func (srv *Server) StreamRoundEvents(req *reflexpb.StreamRequest,

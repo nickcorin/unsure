@@ -2,9 +2,9 @@ package ops
 
 import (
 	"database/sql"
+	"github.com/nickcorin/unsure/player"
 
 	"github.com/corverroos/unsure/engine"
-	"github.com/nickcorin/unsure/player"
 )
 
 // Backends defines the interface for the client dependencies required for

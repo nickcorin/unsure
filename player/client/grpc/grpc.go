@@ -3,13 +3,13 @@ package grpc
 import (
 	"context"
 	"flag"
-	"github.com/nickcorin/unsure/player/playerpb/protocp"
 
 	"github.com/luno/jettison/errors"
 	"github.com/luno/reflex"
 	"github.com/luno/reflex/reflexpb"
 	"google.golang.org/grpc"
 
+	"github.com/nickcorin/unsure/player/playerpb/protocp"
 	"github.com/nickcorin/unsure/player"
 	pb "github.com/nickcorin/unsure/player/playerpb"
 	"github.com/nickcorin/unsure/player/server"
@@ -60,6 +60,11 @@ type client struct {
 	address   string
 	rpcConn   *grpc.ClientConn
 	rpcClient pb.PlayerClient
+}
+
+func (c *client) Ping(ctx context.Context) error {
+	_, err := c.rpcClient.Ping(ctx, &pb.Empty{})
+	return err
 }
 
 // StreamEvents returns a reflex.StreamClient that can be used to

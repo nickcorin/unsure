@@ -6,10 +6,13 @@ import "github.com/luno/reflex/reflexpb/reflex.proto";
 import "google/protobuf/timestamp.proto";
 
 service Player {
+    rpc Ping(Empty) returns (Empty) {}
     rpc StreamRoundEvents(reflexpb.StreamRequest) returns (stream reflexpb.Event) {}
     rpc GetParts(GetPartsReq) returns (GetPartsResp) {}
     rpc GetRound(GetRoundReq) returns (GetRoundResp) {}
 }
+
+message Empty{}
 
 message GetPartsReq {
     int64 external_id = 1;

@@ -8,6 +8,9 @@ import (
 
 // Client defines the API for the Player service.
 type Client interface {
+	// Ping checks if the client connection is alive.
+	Ping(ctx context.Context) error
+
 	// StreamEvents returns a reflex.StreamClient that can be used to
 	// stream reflex events from a Player.
 	StreamEvents(ctx context.Context, after string,

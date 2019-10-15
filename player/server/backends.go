@@ -2,8 +2,8 @@ package server
 
 import (
 	"database/sql"
-
 	"github.com/corverroos/unsure/engine"
+
 	"github.com/nickcorin/unsure/player"
 )
 

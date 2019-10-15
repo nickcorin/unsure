@@ -125,7 +125,7 @@ func notifyToSubmit(b Backends) reflex.Consumer {
 func notifyRoundCompletion(b Backends) reflex.Consumer {
 	f := func(ctx context.Context, fate fate.Fate, e *reflex.Event) error {
 		// Skip uninteresting events.
-		if reflex.IsAnyType(e.Type, engine.EventTypeRoundSuccess,
+		if !reflex.IsAnyType(e.Type, engine.EventTypeRoundSuccess,
 			engine.EventTypeRoundFailed) {
 			return fate.Tempt()
 		}
