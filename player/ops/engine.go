@@ -106,3 +106,39 @@ func notifyToSubmit(b Backends) reflex.Consumer {
 	
 	return reflex.NewConsumer(player.ConsumerNotifyToSubmit, f)
 }
+
+func notifyRoundCompletion(b Backends) reflex.Consumer {
+	f := func(ctx context.Context, fate fate.Fate, e *reflex.Event) error {
+		// Skip uninteresting events.
+		if reflex.IsAnyType(e.Type, engine.EventTypeRoundSuccess,
+			engine.EventTypeRoundFailed) {
+				return fate.Tempt()
+		}
+
+		// Lookup the round.
+		r, err := rounds.LookupByExternalID(ctx, b.PlayerDB(), e.ForeignIDInt())
+		if err != nil {
+			return errors.Wrap(err, "failed to lookup round",
+				j.KV("round", e.ForeignIDInt()))
+		}
+
+		// Shift the round to completed - either success or failed.
+		if reflex.IsType(e.Type, engine.EventTypeRoundSuccess) {
+			err = rounds.ShiftToSuccess(ctx, b.PlayerDB(), r.ID)
+			if err != nil {
+				return errors.Wrap(err, "failed to shift round to failed",
+					j.KV("round", r.ID))
+			}
+		} else {
+			err = rounds.ShiftToFailed(ctx, b.PlayerDB(), r.ID)
+			if err != nil {
+				return errors.Wrap(err, "failed to shift round to success",
+					j.KV("round", r.ID))
+			}
+		}
+
+		return fate.Tempt()
+	}
+
+	return reflex.NewConsumer(player.ConsumerNotifyRoundCompletion, f)
+}

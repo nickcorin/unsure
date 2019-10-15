@@ -22,6 +22,11 @@ const (
 	// peer should submit its parts.
 	ConsumerNotifyToSubmit consumer = "notify_to_submit"
 
+	// ConsumerNotifyRoundCompletion defines the reflex consumer that consumes
+	// remote EventTypeRoundSuccess and EventTypeRoundFailed events from the
+	// Unsure Engine indicating that the current round has ended.
+	ConsumerNotifyRoundCompletion consumer = "notify_round_completion"
+
 	/* Local Event Streams */
 
 	// ConsumerJoinRounds defines the reflex consumer that consumes local

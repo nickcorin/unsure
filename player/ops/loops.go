@@ -21,6 +21,7 @@ func StartLoops(b Backends) {
 	go notifyToJoinForever(b)
 	go notifyToCollectForever(b)
 	go notifyToSubmitForever(b)
+	go notifyRoundCompletionForever(b)
 
 	// Local events.
 	go joinRoundsForever(b)
@@ -56,6 +57,15 @@ func notifyToSubmitForever(b Backends) {
 	consumable := reflex.NewConsumable(b.EngineClient().Stream,
 		cursors.Store(b.PlayerDB()))
 	consumer := notifyToSubmit(b)
+
+	rpatterns.ConsumeForever(unsure.FatedContext, consumable.Consume,
+		consumer)
+}
+
+func notifyRoundCompletionForever(b Backends) {
+	consumable := reflex.NewConsumable(b.EngineClient().Stream,
+		cursors.Store(b.PlayerDB()))
+	consumer := notifyRoundCompletion(b)
 
 	rpatterns.ConsumeForever(unsure.FatedContext, consumable.Consume,
 		consumer)
