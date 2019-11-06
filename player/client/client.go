@@ -3,8 +3,8 @@ package client
 import (
 	"github.com/luno/jettison/errors"
 
-	"github.com/nickcorin/unsure/player"
-	"github.com/nickcorin/unsure/player/client/grpc"
+	"unsure/player"
+	"unsure/player/client/grpc"
 )
 
 // Make returns a Player client communicating on an appropriate communication

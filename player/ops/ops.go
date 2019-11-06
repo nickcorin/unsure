@@ -2,16 +2,20 @@ package ops
 
 import (
 	"context"
-	"github.com/nickcorin/unsure/player"
-	"github.com/nickcorin/unsure/player/internal/db/rounds"
+	"unsure/player"
+	"unsure/player/internal/db/rounds"
 	"strings"
 
 	"github.com/luno/fate"
 	"github.com/luno/jettison/errors"
 	"github.com/luno/jettison/j"
 
-	"github.com/nickcorin/unsure/player/internal/db/parts"
+	"unsure/player/internal/db/parts"
 )
+
+func GetName() string {
+	return *playerName
+}
 
 func maybeReadyToSubmit(ctx context.Context, b Backends, f fate.Fate,
 	roundID int64) error {

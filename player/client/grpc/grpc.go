@@ -3,16 +3,16 @@ package grpc
 import (
 	"context"
 	"flag"
+	"github.com/corverroos/unsure"
 
 	"github.com/luno/jettison/errors"
 	"github.com/luno/reflex"
 	"github.com/luno/reflex/reflexpb"
 	"google.golang.org/grpc"
 
-	"github.com/nickcorin/unsure/player/playerpb/protocp"
-	"github.com/nickcorin/unsure/player"
-	pb "github.com/nickcorin/unsure/player/playerpb"
-	"github.com/nickcorin/unsure/player/server"
+	"unsure/player"
+	pb "unsure/player/playerpb"
+	"unsure/player/playerpb/protocp"
 )
 
 var _ player.Client = (*client)(nil)
@@ -46,7 +46,7 @@ func New(opts ...clientOpt) (player.Client, error) {
 	}
 
 	var err error
-	c.rpcConn, err = server.NewGRPCClient(c.address)
+	c.rpcConn, err = unsure.NewClient(c.address)
 	if err != nil {
 		return nil, err
 	}
@@ -80,6 +80,16 @@ func (c *client) StreamEvents(ctx context.Context, after string,
 	return streamFn(ctx, after, opts...)
 }
 
+// GetName returns a Player's name.
+func (c *client) GetName(ctx context.Context) (string, error) {
+	res, err := c.rpcClient.GetName(ctx, &pb.Empty{})
+	if err != nil {
+		return "", err
+	}
+
+	return res.Name, nil
+}
+
 // GetParts returns a Player's parts received for a given round.
 func (c *client) GetParts(ctx context.Context, externalID int64) (
 	[]player.Part, error) {
@@ -106,12 +116,12 @@ func (c *client) GetParts(ctx context.Context, externalID int64) (
 // GetRound returns a local rounds from a Player's DB.
 func (c *client) GetRound(ctx context.Context, roundID int64) (
 	*player.Round, error) {
-		res, err := c.rpcClient.GetRound(ctx, &pb.GetRoundReq{
-			RoundId: roundID,
-		})
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to get round")
-		}
-		
-		return protocp.RoundFromProto(res.Round)
+	res, err := c.rpcClient.GetRound(ctx, &pb.GetRoundReq{
+		RoundId: roundID,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get round")
+	}
+
+	return protocp.RoundFromProto(res.Round)
 }

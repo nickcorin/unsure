@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"github.com/luno/jettison/errors"
 
-	"github.com/nickcorin/unsure/player"
+	"unsure/player"
 )
 
 const cols = "id, round_id, player, coalesce(rank, 0), value, submitted," +
@@ -108,6 +108,17 @@ func LookupRankByPlayer(ctx context.Context, dbc *sql.DB, roundID int64,
 	}
 
 	return r.Rank, nil
+}
+
+func MarkAsSubmittedTx(ctx context.Context, tx *sql.Tx, roundID int64,
+	player string) error {
+	_, err := tx.ExecContext(ctx, "update parts set submitted=true, "+
+		"updated_at=now() where round_id=? and player=?", roundID, player)
+	if err != nil {
+		return errors.Wrap(err, "failed to mark parts as submitted")
+	}
+
+	return nil
 }
 
 func MarkAsSubmitted(ctx context.Context, dbc *sql.DB, roundID int64,

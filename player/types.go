@@ -12,37 +12,34 @@ const (
 	// data.
 	RoundStatusUnknown RoundStatus = 0
 
-	// RoundStatusJoin indicates that a Player should attempt to join a round.
-	RoundStatusJoin RoundStatus = 1
+	// RoundStatusReady indicates that a player is online and ready to join a
+	// round.
+	RoundStatusReady RoundStatus = 1
 
 	// RoundStatusJoined indicates that a player has successfully joined a
 	// round.
 	RoundStatusJoined RoundStatus = 2
 
-	// RoundStatusCollect indicates that a player should attempt to collect
-	// parts from the engine.
-	RoundStatusCollect RoundStatus = 3
+	// RoundStatusExcluded indicates that a player has been excluded from a
+	// round.
+	RoundStatusExcluded RoundStatus = 3
 
 	// RoundStatusCollected indicates that a player has successfully collected
 	// parts from the engine.
 	RoundStatusCollected RoundStatus = 4
 
-	// RoundStatusSubmit indicates that a player should attempt to submit their
-	// parts to the engine.
-	RoundStatusSubmit RoundStatus = 5
-
 	// RoundStatusSubmitted indicates that a player has successfully submitted
 	// their parts to the engine.
-	RoundStatusSubmitted RoundStatus = 6
+	RoundStatusSubmitted RoundStatus = 5
 
 	// RoundStatusSuccess indicates that a player successfully passed a round.
-	RoundStatusSuccess RoundStatus = 7
+	RoundStatusSuccess RoundStatus = 6
 
 	// RoundStatusFailed indicates that a player failed a round.
-	RoundStatusFailed RoundStatus = 8
+	RoundStatusFailed RoundStatus = 7
 
 	// must be last.
-	roundStatusSentinel = 9
+	roundStatusSentinel = 8
 )
 
 // Valid returns whether "rs" is a declared RoundStatus constant.

@@ -3,12 +3,13 @@ package rounds
 import (
 	"context"
 	"database/sql"
+	"unsure/player/internal/db/parts"
 
 	"github.com/luno/jettison/errors"
 	"github.com/luno/reflex"
 	"github.com/luno/reflex/rsql"
 
-	"github.com/nickcorin/unsure/player"
+	"unsure/player"
 )
 
 var events = rsql.NewEventsTableInt("round_events",
@@ -87,14 +88,32 @@ func ShiftToSubmit(ctx context.Context, dbc *sql.DB, id int64) error {
 }
 
 // ShiftToSubmitted attempts to shift a Round into player.RoundStatusSubmitted.
-func ShiftToSubmitted(ctx context.Context, dbc *sql.DB, id int64) error {
+func ShiftToSubmitted(ctx context.Context, dbc *sql.DB, id int64,
+	p string) error {
 	r, err := Lookup(ctx, dbc, id)
 	if err != nil {
 		return errors.Wrap(err, "failed to lookup round")
 	}
 
-	return roundsFSM.Update(ctx, dbc, r.Status, player.RoundStatusSubmitted,
-		empty{ID: id})
+	tx, err := dbc.Begin()
+	if err != nil {
+		return errors.Wrap(err, "failed to start db transaction")
+	}
+	defer tx.Rollback()
+
+	err = parts.MarkAsSubmittedTx(ctx, tx, id, p)
+	if err != nil {
+		return errors.Wrap(err, "failed to mark parts as submitted")
+	}
+
+	notify, err := roundsFSM.UpdateTx(ctx, tx, r.Status,
+		player.RoundStatusSubmitted, empty{ID: id})
+	if err != nil {
+		return errors.Wrap(err, "failed to shift round to failed")
+	}
+	defer notify()
+
+	return tx.Commit()
 }
 
 // ShiftToSuccess attempts to shift a Round into player.RoundStatusSuccess.

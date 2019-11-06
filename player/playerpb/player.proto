@@ -10,9 +10,14 @@ service Player {
     rpc StreamRoundEvents(reflexpb.StreamRequest) returns (stream reflexpb.Event) {}
     rpc GetParts(GetPartsReq) returns (GetPartsResp) {}
     rpc GetRound(GetRoundReq) returns (GetRoundResp) {}
+    rpc GetName(Empty) returns (GetNameResp) {}
 }
 
 message Empty{}
+
+message GetNameResp {
+    string name = 1;
+}
 
 message GetPartsReq {
     int64 external_id = 1;

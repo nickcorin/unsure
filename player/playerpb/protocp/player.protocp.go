@@ -3,8 +3,8 @@ package protocp
 import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/luno/jettison/errors"
-	"github.com/nickcorin/unsure/player"
-	pb "github.com/nickcorin/unsure/player/playerpb"
+	"unsure/player"
+	pb "unsure/player/playerpb"
 )
 
 // PartFromProto converts a pb.Part to a player.Part.

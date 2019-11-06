@@ -21,4 +21,7 @@ type Client interface {
 
 	// GetRound returns a local rounds from a Player's DB.
 	GetRound(ctx context.Context, roundID int64) (*Round, error)
+
+	// GetName returns a Player's name.
+	GetName(ctx context.Context) (string, error)
 }

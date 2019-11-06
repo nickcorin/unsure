@@ -2,7 +2,7 @@ package ops
 
 import (
 	"database/sql"
-	"github.com/nickcorin/unsure/player"
+	"unsure/player"
 
 	"github.com/corverroos/unsure/engine"
 )

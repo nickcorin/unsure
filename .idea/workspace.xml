@@ -2,19 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5835794d-0f3b-4ce6-9e88-6d31625d4176" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/player/api.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/client/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/client/client.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/player/client/grpc/grpc.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/client/grpc/grpc.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/internal/db/connect.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/internal/db/connect.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/internal/db/parts/parts.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/internal/db/parts/parts.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/internal/db/rounds/rounds.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/internal/db/rounds/rounds.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/internal/db/rounds/shift.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/internal/db/rounds/shift.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/player/ops/backends.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/ops/backends.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/player/ops/engine.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/ops/engine.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/ops/local.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/ops/local.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/player/ops/loops.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/ops/loops.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/ops/ops.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/ops/ops.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/ops/peer.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/ops/peer.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/player/player/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/player/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/playerpb/player.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/playerpb/player.pb.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/player/playerpb/player.proto" beforeDir="false" afterPath="$PROJECT_DIR$/player/playerpb/player.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/playerpb/protocp/player.protocp.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/playerpb/protocp/player.protocp.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/player/server/backends.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/server/backends.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/player/server/grpc.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/server/grpc.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/server/grpc.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/player/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/server/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/state/state.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/state/state.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/types.go" beforeDir="false" afterPath="$PROJECT_DIR$/player/types.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -29,7 +42,7 @@
       </list>
     </option>
   </component>
-  <component name="GOROOT" path="/usr/local/go" />
+  <component name="GOROOT" path="/usr/local/Cellar/go/1.12.6/libexec" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -39,6 +52,7 @@
   <component name="ProjectId" id="1SCnkc7gO3fk2Ut79uoZVcDsKgV" />
   <component name="PropertiesComponent">
     <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
@@ -46,6 +60,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">

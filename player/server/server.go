@@ -3,15 +3,15 @@ package server
 import (
 	"context"
 	"github.com/luno/jettison/j"
-	"github.com/nickcorin/unsure/player/ops"
-	"github.com/nickcorin/unsure/player/playerpb/protocp"
+	"unsure/player/ops"
+	"unsure/player/playerpb/protocp"
 
 	"github.com/luno/jettison/errors"
 	"github.com/luno/reflex"
 	"github.com/luno/reflex/reflexpb"
 
-	"github.com/nickcorin/unsure/player/internal/db/rounds"
-	pb "github.com/nickcorin/unsure/player/playerpb"
+	"unsure/player/internal/db/rounds"
+	pb "unsure/player/playerpb"
 )
 
 var _ pb.PlayerServer = (*Server)(nil)
@@ -32,6 +32,10 @@ func New(b Backends) *Server {
 	}
 }
 
+func (srv *Server) Stop() {
+	srv.rserver.Stop()
+}
+
 // Ping returns an empty response.
 func (srv *Server) Ping(ctx context.Context, req *pb.Empty) (*pb.Empty, error) {
 	return req, nil
@@ -42,6 +46,12 @@ func (srv *Server) Ping(ctx context.Context, req *pb.Empty) (*pb.Empty, error) {
 func (srv *Server) StreamRoundEvents(req *reflexpb.StreamRequest,
 	ss pb.Player_StreamRoundEventsServer) error {
 	return nil
+}
+
+// GetName returns the Player's name.
+func (srv *Server) GetName(ctx context.Context, req *pb.Empty) (*pb.GetNameResp,
+	error) {
+	return &pb.GetNameResp{Name: ops.GetName()}, nil
 }
 
 // GetParts returns a Player's parts received for a given round.

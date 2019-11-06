@@ -1,4 +1,4 @@
-module github.com/nickcorin/unsure
+module unsure
 
 go 1.12
 

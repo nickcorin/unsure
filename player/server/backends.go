@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"github.com/corverroos/unsure/engine"
 
-	"github.com/nickcorin/unsure/player"
+	"unsure/player"
 )
 
 // Backends defines the interface for the client dependencies required for

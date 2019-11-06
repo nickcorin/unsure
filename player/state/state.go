@@ -3,15 +3,15 @@ package state
 import (
 	"database/sql"
 	"flag"
-	"github.com/nickcorin/unsure/player/internal/db"
+	"unsure/player/internal/db"
 	"strings"
 
 	"github.com/corverroos/unsure/engine"
 	engine_client "github.com/corverroos/unsure/engine/client"
 	"github.com/luno/jettison/errors"
 
-	"github.com/nickcorin/unsure/player"
-	player_client "github.com/nickcorin/unsure/player/client/grpc"
+	"unsure/player"
+	player_client "unsure/player/client/grpc"
 )
 
 var peers = flag.String("peers", "", "List of peer addresses (comma separated)")
